@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Labor-Potenzial-Rechner</title>
-    <!-- Tailwind CSS für sauberes, modernes Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Nordic Typografie: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -65,17 +63,13 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans relative">
 
-    <!-- Roche Logo (Oben Rechts) - Hochauflösendes SVG für Web-Kompatibilität -->
     <div class="absolute top-6 right-6 md:top-8 md:right-10 z-40">
         <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Hoffmann-La_Roche_logo.svg" alt="Roche Logo" class="h-10 md:h-12 w-auto drop-shadow-sm">
     </div>
 
-    <!-- Container für die App -->
     <div id="app" class="flex-grow flex flex-col items-center p-6 md:p-12 w-full max-w-5xl mx-auto transition-all duration-300">
-        <!-- Content wird durch JS injiziert -->
-    </div>
+        </div>
 
-    <!-- Kontakt-Modal -->
     <div id="contact-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div id="contact-modal-content" class="bg-white rounded-lg p-8 max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300 relative">
             <h3 class="text-2xl font-light text-brand-xdark mb-2">Beratung anfragen</h3>
@@ -100,7 +94,6 @@
                         <textarea id="contact-message" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-brand-dark focus:ring-1 focus:ring-brand-dark text-sm transition-colors resize-none"></textarea>
                     </div>
 
-                    <!-- Datenschutz Consent -->
                     <div class="flex items-start gap-3 pt-2">
                         <div class="flex items-center h-5">
                             <input id="contact-consent" name="consent" type="checkbox" required class="w-4 h-4 text-roche border-gray-300 rounded focus:ring-roche cursor-pointer">
@@ -238,7 +231,7 @@
             }, 300);
         };
 
-        // --- NEUE GOOGLE SHEETS SUBMIT LOGIK ---
+        // --- FORMSPREE SUBMIT LOGIK ---
         window.submitForm = (e) => {
             e.preventDefault(); // Verhindert Neuladen der Seite
             
@@ -261,7 +254,7 @@
             else if (score <= 28) level = "Mittleres Potenzial";
             else level = "Hohes Potenzial";
 
-            // FormData zusammenbauen (Kompatibel mit typischen Google Apps Scripts)
+            // FormData zusammenbauen (Kompatibel mit Formspree)
             const formData = new FormData();
             formData.append('Name', name);
             formData.append('Email', email);
@@ -278,13 +271,16 @@
             
             formData.append('Datum', new Date().toLocaleString('de-CH'));
 
-            // Deine Google Sheets API URL
-            const scriptURL = 'https://script.google.com/a/macros/roche.com/s/AKfycbw5PDcbHBOCHW_uQ4G3KVl_E1zp6kutAsEYx4Si1tyJvwrXMQ63ebAra9a3f1MMheee/exec';
+            // Deine Formspree API URL
+            const scriptURL = 'https://formspree.io/f/xkopnwor';
 
-            // Anfrage an Google Sheet senden
+            // Anfrage an Formspree senden (mit JSON-Header, damit kein Redirect passiert)
             fetch(scriptURL, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
             })
             .then(response => {
                 closeModal();
